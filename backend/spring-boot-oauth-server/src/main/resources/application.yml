@@ -1,0 +1,31 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: spring-boot-oauth-server
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/oauth2_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  security:
+    oauth2:
+      authorizationserver:
+        issuer: http://localhost:9000
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    com.oauth: DEBUG
