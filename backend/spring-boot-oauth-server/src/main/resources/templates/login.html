@@ -50,8 +50,8 @@
             token as a query parameter when the CsrfRequestDataValueProcessor is active.
             We also embed it as a hidden field for belt-and-suspenders safety.
         -->
-        <form th:action="@{/login}" method="post" class="login-form" autocomplete="off">
-
+        <!-- <form th:action="@{/login}" method="post" class="login-form" autocomplete="off"> -->
+        <form action="/login" method="post" class="login-form" autocomplete="off">
             <!-- CSRF hidden field — Thymeleaf resolves _csrf from the request attribute
                  set by CsrfTokenRequestAttributeHandler in the security config.        -->
             <input type="hidden"

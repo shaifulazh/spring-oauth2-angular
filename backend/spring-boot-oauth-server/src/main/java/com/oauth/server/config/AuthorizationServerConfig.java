@@ -82,7 +82,8 @@ public class AuthorizationServerConfig {
 		)
                 // Accept access tokens for User Info and/or Client Registration
                 .oauth2ResourceServer(rs -> rs.jwt(Customizer.withDefaults()))
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                ;
 
         return http.build();
     }
@@ -109,8 +110,7 @@ public class AuthorizationServerConfig {
                         .csrfTokenRequestHandler(csrfRequestHandler)
                         .ignoringRequestMatchers(
                                 PathPatternRequestMatcher.withDefaults().matcher("/api/**"),
-                                PathPatternRequestMatcher.withDefaults().matcher("/oauth2/**"),
-                                PathPatternRequestMatcher.withDefaults().matcher("/logout")
+                                PathPatternRequestMatcher.withDefaults().matcher("/oauth2/**")
                         )
                 )
 
@@ -138,7 +138,6 @@ public class AuthorizationServerConfig {
                 // Spring form-based login for the authorization endpoint redirect
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .permitAll()
                 )
 
                 // ── Logout ────────────────────────────────────────────────────
@@ -152,7 +151,7 @@ public class AuthorizationServerConfig {
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID", "XSRF-TOKEN")
-                        .permitAll()
+                        // .permitAll()
                 )
 
                 // Protect /api/** endpoints as a Resource Server (JWT validation)

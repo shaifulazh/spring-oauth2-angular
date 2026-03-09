@@ -28,4 +28,6 @@ spring:
 logging:
   level:
     org.springframework.security: DEBUG
+    org.springframework.web: DEBUG        # logs request handling and redirects
     com.oauth: DEBUG
+    org.springframework.security.oauth2: DEBUG # OAuth2 client events
