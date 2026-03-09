@@ -32,6 +32,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
@@ -60,9 +61,11 @@ public class AuthorizationServerConfig {
             throws Exception {
 
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = OAuth2AuthorizationServerConfigurer
+                .authorizationServer();
 
-        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-                .oidc(Customizer.withDefaults()); // Enable OpenID Connect 1.0
+        // http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+        //         .oidc(Customizer.withDefaults()); // Enable OpenID Connect 1.0
 
         http
                 // Redirect to login page when not authenticated from the authorization endpoint
@@ -71,6 +74,10 @@ public class AuthorizationServerConfig {
                                 new LoginUrlAuthenticationEntryPoint("/login"),
                                 new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
                         )
+                )
+                .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
+                .with(authorizationServerConfigurer, (authorizationServer) -> authorizationServer
+                        .oidc(Customizer.withDefaults()) // Enable OpenID Connect 1.0
                 )
                 // Accept access tokens for User Info and/or Client Registration
                 .oauth2ResourceServer(rs -> rs.jwt(Customizer.withDefaults()))
@@ -100,9 +107,9 @@ public class AuthorizationServerConfig {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(csrfRequestHandler)
                         .ignoringRequestMatchers(
-                                new AntPathRequestMatcher("/api/**"),
-                                new AntPathRequestMatcher("/oauth2/**"),  // handled by chain 1
-                                new AntPathRequestMatcher("/logout")      // SPA posts here without CSRF cookie
+                                PathPatternRequestMatcher.withDefaults().matcher("/api/**"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/oauth2/**"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/logout")
                         )
                 )
 
